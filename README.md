@@ -42,7 +42,7 @@ Después de esto te preguntará si quieres empezar el trade y, seguidamente, qu�
 - **min_btc** = Cantidad mínima en BTC que necesita Pythoniex para empezar el trading.
 
 Estrategias
-- ^Stop-loss móvil**: Compra en rango de resistencia y configura la cantidad de checkpoints, el stop-loss de protección y el porcentaje de subida del stop-loss móvil entre checkpoints. Hazlo con cabeza, teniendo en cuenta si vas a tradear a largo, medio o corto plazo y la volatilidad del mercado.
+- **Stop-loss móvil**: Compra en rango de resistencia y configura la cantidad de checkpoints, el stop-loss de protección y el porcentaje de subida del stop-loss móvil entre checkpoints. Hazlo con cabeza, teniendo en cuenta si vas a tradear a largo, medio o corto plazo y la volatilidad del mercado.
 - **Ping-pong**: Compra a precio de compra y vende a precio de venta, coloca los checkpoints bien juntos y haz la variable reiniciar = True para que Pythoniex esté constantemente comprando y vendiendo. 
 
 Advertencias:
