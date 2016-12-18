@@ -1,10 +1,10 @@
 Pythoniex, bot de trading gratuito y configurable para Poloniex
 
 El sistema funciona a base de un stop-loss de protección móvil, sin mostrar sus cartas al mercado, aunque también se puede configurar para que haga compras y ventas con la estrategia de ping-pong.
-Es un bot de trading automático mediante línea de comandos escrito en Python 2.7, con una base de datos sqlite3. El código, los comentarios y la interfaz de línea de comandos están completamente en español, debido a que es mi lengua materna y me es más cómoda para programar.
+Es un bot de trading automático mediante línea de comandos escrito en Python 2.7, con una base de datos sqlite3. El código, los comentarios y la interfaz de línea de comandos están completamente en español, debido a que es mi lengua materna y me es más cómoda para programar. Tiene advertencias de depuración para analizar fallos en el código. Úsalo con cuidado, pues no garantizo el 100% de fiabilidad en su funcionamiento (recomiendo trabajar con cable de red).
 
-Si alguien quiere mejorar el código es libre de hacerlo y se puede utilizar el bot, aunque nunca venderlo. Yo he llegado a ganar de un 10% a un 15% diario, aunque depende de tu suerte, tu estrategia y cómo lo configures.
-Aquí ofrezco una guía paso a paso de cómo comenzar a usarlo y cómo sacarle el mayor rendimiento entendiendo como funciona.
+Si alguien quiere mejorar el código es libre de hacerlo y se puede utilizar el bot, aunque nunca venderlo. Yo he llegado a ganar entre un 5% a un 15% diario, aunque depende de tu suerte, la estrategia que uses y cómo lo configures.
+Aquí ofrezco una guía paso a paso para comenzar a usarlo y sacarle el mayor rendimiento entendiendo como funciona, aunque no
 
 El bot está completamente escrito en español, incluidas las interfaces de comandos.
 
