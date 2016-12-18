@@ -1,14 +1,14 @@
-Pythoniex, bot de trading gratuito y configurable para Poloniex
+# Pythoniex, bot de trading gratuito y configurable para Poloniex
 
 El sistema funciona a base de un stop-loss de protección móvil, sin mostrar sus cartas al mercado, aunque también se puede configurar para que haga compras y ventas con la estrategia de ping-pong.
-Es un bot de trading automático mediante línea de comandos escrito en Python 2.7, con una base de datos sqlite3. El código, los comentarios y la interfaz de línea de comandos están completamente en español, debido a que es mi lengua materna y me es más cómoda para programar. 
+Es un bot de trading automático mediante línea de comandos escrito en Python 2.7, con una base de datos sqlite3. El código, los comentarios y la interfaz de línea de comandos están completamente en español.
 
 Tiene advertencias de depuración para analizar fallos en el código. Úsalo con cuidado, pues no garantizo el 100% de fiabilidad en su funcionamiento (recomiendo trabajar con cable de red).
 
 Si alguien quiere mejorar el código es libre de hacerlo y se puede utilizar el bot, aunque nunca venderlo. Yo he llegado a ganar entre un 5% a un 15% diario, aunque depende de tu suerte, la estrategia que uses y cómo lo configures.
-Aquí ofrezco una guía paso a paso para comenzar a usarlo y sacarle el mayor rendimiento entendiendo como funciona, aunque la mejor documentación es el propio código.
+Aquí ofrezco una guía paso a paso para comenzar a usarlo y sacarle el mayor rendimiento entendiendo cómo funciona, aunque la mejor documentación es el propio código.
 
-El bot está completamente escrito en español, incluidas las interfaces de comandos.
+### Funcionamiento
 
 1. Instala Python 2.7 si no lo tienes.
 
@@ -23,6 +23,8 @@ Entonces te pedirá que insertes el rango mínimo de soporte. Si en este momento
 Luego introduce el rango de resistencia. Pythoniex no intentará vender en esa zona, simplemente es un indicador para que calcule los checkpoints. Si pulsas enter después de introducir el rango máximo de resistencia, te mostrará una serie de checkpoints. Estos son los precios en los que Pythoniex, si son superados, subirá el stop-loss móvil, teniendo en cuenta el porcentaje introducido en la variable `stop_loss_movil` en el archivo de configuración (ver abajo).
 Para calcular los checkpoints, Pythoniex calcula primero la media del rango de soporte y luego la de resistencia. La diferencia entre esos dos precios los divide por el número de checkpoints introducidos en el archivo de configuración, entonces, partiendo de la media de soporte va introduciendo checkpoints hasta la media de resistencia. 
 Después de esto te preguntará si quieres empezar el trade y, seguidamente, qué es lo que deseas hacer, si comprar, vender o dejar a Pythoniex elegir. Si lo dejas elegir Pythoniex comprobará si tienes de la moneda que has elegido, si no intentará comprar en rango de soporte. Si ya tienes, comrpbará si el precio actual es mayor que los checkpoints y, si es así, intentará vender.
+
+### Configuración
 
 6. En el archivo `config.py`, que se encuentra en la carpeta modules se encuentran los siguientes parámetros configurables. Edítalo a tu gusto. Los parámetros son:
 
@@ -43,11 +45,12 @@ Después de esto te preguntará si quieres empezar el trade y, seguidamente, qu�
 - **espera** = Un número que representa la cantidad de segundos que transcurre el bot esperando, desde un intento de compra o de venta a otro. Si pones un número muy bajo corres el riesgo de que Poloniex banee tu IP, ya que sólo se permiten 6 órdenes por segundo.
 - **min_btc** = Cantidad mínima en BTC que necesita Pythoniex para empezar el trading.
 
-Estrategias
+### Estrategias
+
 - **Stop-loss móvil**: Compra en rango de resistencia y configura la cantidad de checkpoints, el stop-loss de protección y el porcentaje de subida del stop-loss móvil entre checkpoints. Hazlo con cabeza, teniendo en cuenta si vas a tradear a largo, medio o corto plazo y la volatilidad del mercado.
 - **Ping-pong**: Compra a precio de compra y vende a precio de venta, coloca los checkpoints bien juntos y haz la variable reiniciar = True para que Pythoniex esté constantemente comprando y vendiendo. 
 
-Advertencias:
+### Advertencias
 Pythoniex sólo tradea con una moneda a la vez, e intentará comprar la mayor cantidad posible con respecto a la cantidad de BTC que tengas. Pythoniex no venderá si la venta no es rentable (considerando siempre que la comisión de compra es de un 0.25%), en ese caso cancelará la orden de venta esperará a que suba el precio.
 Para un correcto funcionamiento no metas BTC y la moneda que compres a la vez en la cuenta de Poloniex. Recomiendo crear una cuenta de Poloniex única para el bot si ya tienes una.
 
