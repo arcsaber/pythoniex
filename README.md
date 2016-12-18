@@ -6,7 +6,7 @@ Es un bot de trading automático mediante línea de comandos escrito en Python 2
 Tiene advertencias de depuración para analizar fallos en el código. Úsalo con cuidado, pues no garantizo el 100% de fiabilidad en su funcionamiento (recomiendo trabajar con cable de red).
 
 Si alguien quiere mejorar el código es libre de hacerlo y se puede utilizar el bot, aunque nunca venderlo. Yo he llegado a ganar entre un 5% a un 15% diario, aunque depende de tu suerte, la estrategia que uses y cómo lo configures.
-Aquí ofrezco una guía paso a paso para comenzar a usarlo y sacarle el mayor rendimiento entendiendo como funciona, aunque no
+Aquí ofrezco una guía paso a paso para comenzar a usarlo y sacarle el mayor rendimiento entendiendo como funciona, aunque la mejor documentación es el propio código.
 
 El bot está completamente escrito en español, incluidas las interfaces de comandos.
 
