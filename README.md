@@ -8,7 +8,7 @@ Tiene advertencias de depuración para analizar fallos en el código. Úsalo con
 Si alguien quiere mejorar el código es libre de hacerlo y se puede utilizar el bot, aunque nunca venderlo. Yo he llegado a ganar entre un 5% a un 15% diario, aunque depende de tu suerte, la estrategia que uses y cómo lo configures.
 Aquí ofrezco una guía paso a paso para comenzar a usarlo y sacarle el mayor rendimiento entendiendo cómo funciona, aunque la mejor documentación es el propio código.
 
-### Funcionamiento
+### Instalación
 
 1. Instala Python 2.7 si no lo tienes.
 
@@ -18,15 +18,21 @@ Aquí ofrezco una guía paso a paso para comenzar a usarlo y sacarle el mayor re
 
 4. Ve al archivo `setup.py`, dentro de la carpeta principal y ejecútalo. Te dirá que 'las tablas se han creado correctamente'. Si no es así revisa que tienes instalado sqlite y que hayas escrito bien la ruta a la base de datos. Si en algún momento borras la base de datos, más que volver a crearla ejecutando `setup.py`.
 
-5. Ahora, si corres el archivo `main.py`, empezará a ejecutarse. Lo primero que te pedirá es que insertes el mercado donde quieres tradear. Inserta STEEM, SBD, BTS o el mercado que quieras (no importa si lo escribes en minúsculas) y pulsa intro. Pythoniex sólo tradea en base al BTC.
+### Funcionamiento
+
+Ahora, si corres el archivo `main.py`, empezará a ejecutarse. Lo primero que te pedirá es que insertes el mercado donde quieres tradear. Inserta STEEM, SBD, BTS o el mercado que quieras (no importa si lo escribes en minúsculas) y pulsa intro. Pythoniex sólo tradea en base al BTC.
+
 Entonces te pedirá que insertes el rango mínimo de soporte. Si en este momento introduces `info` y pulsas intro, se abrirá una pestaña del navegador que te llevará a la página en Poloniex del mercado que has elegido. El rango de soporte es la zona donde intentará comprar Pythoniex. Debes introducir un precio mínimo y un precio máximo (siempre en BTC).
+
 Luego introduce el rango de resistencia. Pythoniex no intentará vender en esa zona, simplemente es un indicador para que calcule los checkpoints. Si pulsas enter después de introducir el rango máximo de resistencia, te mostrará una serie de checkpoints. Estos son los precios en los que Pythoniex, si son superados, subirá el stop-loss móvil, teniendo en cuenta el porcentaje introducido en la variable `stop_loss_movil` en el archivo de configuración (ver abajo).
+
 Para calcular los checkpoints, Pythoniex calcula primero la media del rango de soporte y luego la de resistencia. La diferencia entre esos dos precios los divide por el número de checkpoints introducidos en el archivo de configuración, entonces, partiendo de la media de soporte va introduciendo checkpoints hasta la media de resistencia. 
+
 Después de esto te preguntará si quieres empezar el trade y, seguidamente, qué es lo que deseas hacer, si comprar, vender o dejar a Pythoniex elegir. Si lo dejas elegir Pythoniex comprobará si tienes de la moneda que has elegido, si no intentará comprar en rango de soporte. Si ya tienes, comrpbará si el precio actual es mayor que los checkpoints y, si es así, intentará vender.
 
 ### Configuración
 
-6. En el archivo `config.py`, que se encuentra en la carpeta modules se encuentran los siguientes parámetros configurables. Edítalo a tu gusto. Los parámetros son:
+En el archivo `config.py`, que se encuentra en la carpeta modules se encuentran los siguientes parámetros configurables. Edítalo a tu gusto. Los parámetros son:
 
 - **keypublic** = El APIKey pública de tu cuenta de Poloniex (entre comillas).
 - **keysecret** = La contraseña o APIKey secret de tu cuenta de Poloniex (entre comillas).
@@ -57,5 +63,5 @@ Para un correcto funcionamiento no metas BTC y la moneda que compres a la vez en
 Si te ha servido, puedes enviarme una donación a mi monedero Bitcoin, se agradece!
 19Tx4p2T66pqqQSJCAPTz7ttgBDpw8caMR
 
-Álvaro Mondéjar Rubio 17/12/2016
+Álvaro Mondéjar Rubio 18/12/2016
 # pythoniex
