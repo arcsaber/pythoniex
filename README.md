@@ -42,7 +42,7 @@ En el archivo `config.py`, que se encuentra en la carpeta modules se encuentran 
 
 - **keypublic** = El APIKey pública de tu cuenta de Poloniex (entre comillas).
 - **keysecret** = La contraseña o APIKey secret de tu cuenta de Poloniex (entre comillas).
-- **ruta_base_datos** = Es la ruta completa hacia la carpeta de tu ordenador donde se guardará la base de datos, por ejemplo: `'C:/User/Desktop/pythoniex/database/base_datos.db'` Fíjate que acaba en `base_datos.db`. El nombre `base_datos` es opcional, puedes usar el que quieras, pero la terminación debe ser `.db`.
+- **ruta_base_datos** = Es la ruta completa hacia la carpeta de tu ordenador donde se guardará la base de datos, por ejemplo: `'C:/User/Desktop/pythoniex/database/base_datos.db'` Fíjate que acaba en `base_datos.db`. 
 - **enviar_mails_operacion** = Elige entre True o False si quieres que el bot te envíe un correo cada vez que venda o compre.
 - **enviar_mails_checkpoint** = Elige entre True o False si quieres que el bot te envíe un correo cada vez que superes un checkpoint.
 - **mail_to** = Indica al mail donde lo quieres enviar (entre comillas)
