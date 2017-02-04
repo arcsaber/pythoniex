@@ -18,7 +18,7 @@ Aquí ofrezco una guía paso a paso para comenzar a usarlo y sacarle el mayor re
 
 3. Ve al archivo `config.py`, dentro de la carpeta modules y escribe la ruta a tu base de datos, el APIKey y el APISecret de tu cuenta de Poloniex. Abajo tienes más información sobre todos los parámetros configurables desde ese archivo.
 
-4. Ve al archivo `setup.py`, dentro de la carpeta principal y ejecútalo. Te dirá que 'las tablas se han creado correctamente'. Si no es así revisa que tienes instalado sqlite y que hayas escrito bien la ruta a la base de datos. Si en algún momento borras la base de datos, más que volver a crearla ejecutando `setup.py`.
+4. Ve al archivo `setup.py`, dentro de la carpeta principal y ejecútalo. Te dirá que 'las tablas se han creado correctamente'. Si no es así revisa que tienes instalado sqlite3 y que hayas escrito bien la ruta a la base de datos. Si en algún momento borras la base de datos, vuelve a crearla ejecutando `setup.py`.
 
 ### Funcionamiento
 
