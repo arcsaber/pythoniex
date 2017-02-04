@@ -34,7 +34,7 @@ Para calcular los checkpoints, Pythoniex calcula primero la media del rango de s
 
 <center>http://www.siglo25.com/img/posts/pythoniex_2.png</center>
 
-Después de esto te preguntará si quieres empezar el trade y, seguidamente, qué es lo que deseas hacer, si comprar, vender o dejar a Pythoniex elegir. Si lo dejas elegir Pythoniex comprobará si tienes de la moneda que has elegido, si no intentará comprar en rango de soporte. Si ya tienes, comrpbará si el precio actual es mayor que los checkpoints y, si es así, intentará vender.
+Después de esto te preguntará si quieres empezar el trade y, seguidamente, qué es lo que deseas hacer, si comprar, vender o dejar a Pythoniex elegir. Si lo dejas elegir Pythoniex comprobará si tienes de la moneda que has elegido, si no intentará comprar en rango de soporte. Si ya tienes, consultará si el precio actual es mayor que los checkpoints y, si es así, intentará vender.
 
 ### Configuración
 
