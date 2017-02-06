@@ -115,7 +115,11 @@ def compra():
             if calculos.rango(str(llamadas.precio(moneda, config.comprar)['precio']), base.mostrar_margen('soporte', 'minimo'), base.mostrar_margen('soporte', 'maximo')) == True:  #Si el precio de venta/compra actual está en el rango de soporte
                 print 'DEP: El precio de ' + moneda + ' (' + str(llamadas.precio(moneda, 'asks')['precio']) + ') está en el rango de soporte, intentamos comprar'   
                 cantidad = float(llamadas.balance('BTC', 'available')) / (float(llamadas.precio(moneda, config.comprar)['precio']) + 0.00000001)  # La cantidad que vamos a comprar
-                respuesta = api.returnOpenOrders('BTC_' + moneda)[0]
+                try:
+                    respuesta = api.returnOpenOrders('BTC_' + moneda)[0]
+                except IndexError:
+                    # Significa que no hay ordenes abiertas
+                    pass
                 try:
                     id_compra = str(respuesta['orderNumber'])
                     print 'DEP: La compra esta abierta, la id es :' + str(id_compra)
