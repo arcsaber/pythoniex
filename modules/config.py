@@ -3,11 +3,11 @@
 # Desde aquí se configura el programa
 
 # INFORMACIÓN PERSONAL
-keypublic = "MJPZAO3L-I4U76E7T-RDS6DOJ2-OTIXSYV5"
-keysecret = "e2c9757f2b2666f8e8e40cadcd0d04e643cc41ec67d84dbdde2ee4e8cb81b763f2d818e311f0bb27d87c1f6c2495ea1132a32a6836ca63846fa75b307d828e48"
+keypublic = "key"
+keysecret = "secret"
 
 # Path de la base de datos 
-ruta_base_datos = '/home/arcsaber/PycharmProjects/elbotogrande/datos/base_datos.db'
+ruta_base_datos = 'xy/base_datos.db'
 
 #----------------------------------
 # Configuracion del mail (Sólo admite gmail)
@@ -20,14 +20,14 @@ enviar_mails_operacion = True
 enviar_mails_checkpoint = False
 
 # Aquí indica el mail al cual lo quieres enviar
-mail_to = 'carloselsekey@gmail.com'
+mail_to = ''
 
 # Aquí el mail desde donde quieres que envíe los datos
 # Recomiendo usar un mail el cual no utilices, así no pones en riesgo la contraseña de tu mail
-mail_from = 'elbotogrande@gmail.com'
+mail_from = ''
 
 # Aquí la contraseña del mail desde donde envias la info (mail_from)
-contra = '3Lbotogrande'
+contra = ''
 
 #-----------------
 
