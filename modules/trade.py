@@ -147,7 +147,7 @@ def compra():
                 estado = 'comprado'
             else:                       #Si el precio de venta actual no está en el rango de soporte
                 print 'El precio de compra actual de ' + moneda + ' no está en el rango de soporte (' + str(llamadas.precio(moneda, config.comprar)['precio']) + ' BTC)'
-                print 'Pythoniex intentará comprar cuando llegue, ten paciencia...'
+                print 'El Boto Grande intentará comprar cuando llegue, ten paciencia...'
                 print
                 if calculos.rango(str(llamadas.precio(moneda, config.comprar)['precio']), base.mostrar_margen('soporte', 'minimo'), base.mostrar_margen('soporte', 'maximo')) == False:             
                     time.sleep(5)          #El programa duerme 5 segundos y vuelve a empezar el bucle While, para intentar de nuevo la compra
@@ -200,7 +200,7 @@ def organizador():
 # Bucle principal
 def trade():
     print '¿Qué quieres hacer?'
-    print '1.Comprar - 2.Vender - 3.Dejar elegir a Pythoniex'
+    print '1.Comprar - 2.Vender - 3.Dejar elegir al Boto Grande'
     eleccion = raw_input('Inserta un número: ')
     if eleccion == '1':
         compra()
