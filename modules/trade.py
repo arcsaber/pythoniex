@@ -37,7 +37,7 @@ def venta():
                     base.actualizar_stoploss(str(trade_layer.subir_stoploss(base.mostrar_checkpoint(str(base.mostrar_check_actual())), float(base.mostrar_checkpoint(str(base.mostrar_check_actual()))))))
                     stop_loss = base.mostrar_stoploss()
                     print 'DEP: Subimos el stop_loss a ' + str(stop_loss)
-                if config.enviar_mails_checkpoint == True:
+                if config.enviar_mails_checkpoint:
                     venta_total_stop_loss = (float(stop_loss) * float(cantidad_compra)) - (float(stop_loss) / 400)
                     avisos.ganancia_relativa(str(venta_total_stop_loss), str(total_compra))
                     print 'DEP: Avisamos por mail de la ganacia relativa '
@@ -73,7 +73,7 @@ def venta():
         else:           # O que no haya caído por debajo del stop de protección, en ese caso
             venta()     # Vuelve a comenzar el bucle para redefinir el stop_loss movil (Esto se hace para defendernos de falsas caídas o de ordenes de compra en solitario cercanas al precio de venta que desaparecen de repente)
     print 'DEP: Esperamos 5 segundos a que el servidor procese la orden'
-    time.sleep(5)       # Duerme 8 segundos para que el servidor procese la orden
+    time.sleep(5)       # Duerme 5 segundos para que el servidor procese la orden
     estado = 'en_proceso'
     while estado == 'en proceso':
         try:
@@ -127,9 +127,10 @@ def compra():
                 except (IndexError, KeyError, UnboundLocalError):
                     respuesta = api.buy('BTC_' + moneda, str(float(llamadas.precio(moneda, config.comprar)['precio']) + 0.00000001), str(cantidad))   #Compramos a precio de compra y nos quedamos con la id de la transacción
                     try:
+                        print str(respuesta['orderNumber'])
                         id_compra = str(respuesta['orderNumber'])
                         print 'DEP: Abrimos la compra a ' + str(api.returnOpenOrders('BTC_' + moneda)[0]['rate']) + ', la id es :' + str(id_compra)
-                    except IndexError or KeyError:
+                    except IndexError or KeyError or TypeError:
                         pass
                 if llamadas.orden_abierta(moneda) == True:    #Mientras haya una orden abierta
                     print 'DEP: Esperamos  ' + str(config.espera) + ' segundos a que la compra se efectúe'                
