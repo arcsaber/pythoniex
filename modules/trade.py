@@ -28,13 +28,13 @@ def venta():
         try:        
             precio_mercado = llamadas.precio(moneda, config.vender)['precio']             # Cogemos el precio de compras
             print 'Precio de mercado: ' + str(precio_mercado) + ',(compraste a ' + str(precio_compra) + ')'
-            if float(precio_mercado) > float(base.mostrar_checkpoint(str(base.mostrar_check_actual()))): # Si el precio de mercado es mayor que el checkpoint actual
+            if float(str(precio_mercado)) > float(str(base.mostrar_checkpoint(base.mostrar_check_actual()))): # Si el precio de mercado es mayor que el checkpoint actual
                 if base.mostrar_check_actual() == '1':
                     base.actualizar_stoploss(str(trade_layer.subir_stoploss(soporte_inicial, str(base.mostrar_checkpoint(1))))) #Subimos el stoploss
                     stop_loss = base.mostrar_stoploss()
                     print 'DEP: El check_actual == 1, subimos el stop_loss a ' + str(stop_loss)
                 else:
-                    base.actualizar_stoploss(str(trade_layer.subir_stoploss(base.mostrar_checkpoint(str(int(base.mostrar_check_actual()) - 1)), float(base.mostrar_checkpoint(str(base.mostrar_check_actual()))))))
+                    base.actualizar_stoploss(str(trade_layer.subir_stoploss(base.mostrar_checkpoint(str(base.mostrar_check_actual())), float(base.mostrar_checkpoint(str(base.mostrar_check_actual()))))))
                     stop_loss = base.mostrar_stoploss()
                     print 'DEP: Subimos el stop_loss a ' + str(stop_loss)
                 if config.enviar_mails_checkpoint == True:
@@ -47,8 +47,11 @@ def venta():
                 print 'DEP: Actualizamos el check_actual a ' + base.mostrar_check_actual()
                 llamadas.venta(base.mostrar_moneda(), llamadas.precio(base.mostrar_moneda(), config.vender), float(llamadas.balance(base.mostrar_moneda(), 'available')))
             else:
-                print 'DEP: Precio < check_actual (' + str(base.mostrar_checkpoint(base.mostrar_check_actual())) + '), esperamos ' + str(config.espera) + ' segundos'
-                print 'Stoploss: ' + str(base.mostrar_stoploss())
+                print 'DEP: Precio < check_actual ({0}), actualmente tenemos {1} de ganancia per mBTC, esperamos {2} segundos'.format(
+                    str(base.mostrar_checkpoint(base.mostrar_check_actual())),
+                    str((float(precio_mercado) - float(precio_compra))*1000),
+                    str(config.espera))
+                print 'Stoploss: ' + str(float(base.mostrar_stoploss()))
                 time.sleep(int(config.espera))
         except KeyboardInterrupt:
             print 'Vas a detener el proceso de venta'
@@ -60,15 +63,13 @@ def venta():
     estimacion_venta = float(llamadas.precio(moneda, config.vender)['precio']) * float(llamadas.balance(moneda, 'available'))
     if float(estimacion_venta - (estimacion_venta / 400)) > float(total_compra):    # Si la venta a precio de mercado con comisiones es rentable
         print 'DEP: Parece que es rentable, intentamos vender'
-        respuesta = llamadas.venta(base.mostrar_moneda(), str(llamadas.precio(base.mostrar_moneda(), config.vender)), float(llamadas.balance(base.mostrar_moneda(), 'available'))) # Vende a precio de mercado
-        print respuesta
-        id_venta = respuesta[0]['orderNumber']
+        respuesta = llamadas.venta(base.mostrar_moneda(), str((llamadas.precio(base.mostrar_moneda(), config.vender))['precio']), float(llamadas.balance(base.mostrar_moneda(), 'available'))) # Vende a precio de mercado
+        id_venta = respuesta['orderNumber']
     else:               # Si no,pueden suceder dos cosas
-        if float(llamadas.precio(moneda, config.vender)['precio']) < float(calculos.porcentaje_resta(config.stop_loss, calculos.media(base.mostrar_margen('soporte', 'minimo'), base.mostrar_margen('soporte', 'maximo')))):  # Que la venta haya caído por debajo del stop loss de protección
+        if float((llamadas.precio(moneda, config.vender))['precio']) < float(calculos.porcentaje_resta(config.stop_loss, calculos.media(base.mostrar_margen('soporte', 'minimo'), base.mostrar_margen('soporte', 'maximo')))):  # Que la venta haya caído por debajo del stop loss de protección
             print 'DEP: El precio ha caído por debajo del stoploss de protección'
-            respuesta = llamadas.venta(base.mostrar_moneda(), str(llamadas.precio(base.mostrar_moneda(), 'bids')), float(llamadas.balance(base.mostrar_moneda(), 'available'))) # Vende desesperadamente a precio de compra
-            print respuesta            
-            id_venta = respuesta[0]['orderNumber']
+            respuesta = llamadas.venta(base.mostrar_moneda(), str((llamadas.precio(base.mostrar_moneda(), config.vender))['precio']), float(llamadas.balance(base.mostrar_moneda(), 'available'))) # Vende desesperadamente a precio de compra
+            id_venta = respuesta['orderNumber']
         else:           # O que no haya caído por debajo del stop de protección, en ese caso
             venta()     # Vuelve a comenzar el bucle para redefinir el stop_loss movil (Esto se hace para defendernos de falsas caídas o de ordenes de compra en solitario cercanas al precio de venta que desaparecen de repente)
     print 'DEP: Esperamos 5 segundos a que el servidor procese la orden'
@@ -123,7 +124,7 @@ def compra():
                 try:
                     id_compra = str(respuesta['orderNumber'])
                     print 'DEP: La compra esta abierta, la id es :' + str(id_compra)
-                except IndexError or KeyError:
+                except (IndexError, KeyError, UnboundLocalError):
                     respuesta = api.buy('BTC_' + moneda, str(float(llamadas.precio(moneda, config.comprar)['precio']) + 0.00000001), str(cantidad))   #Compramos a precio de compra y nos quedamos con la id de la transacción
                     try:
                         id_compra = str(respuesta['orderNumber'])
@@ -148,7 +149,7 @@ def compra():
                 print 'Pythoniex intentará comprar cuando llegue, ten paciencia...'
                 print
                 if calculos.rango(str(llamadas.precio(moneda, config.comprar)['precio']), base.mostrar_margen('soporte', 'minimo'), base.mostrar_margen('soporte', 'maximo')) == False:             
-                    time.sleep(10)          #El programa duerme 10 segundos y vuelve a empezar el bucle While, para intentar de nuevo la compra
+                    time.sleep(5)          #El programa duerme 5 segundos y vuelve a empezar el bucle While, para intentar de nuevo la compra
                     compra()
         except KeyboardInterrupt:
             print 'Vas a detener el proceso de compra'

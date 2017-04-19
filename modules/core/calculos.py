@@ -16,8 +16,7 @@ def media(*valores):
 #Devuelve la diferencia entre el número dado y el nuevo número calculado
 #Ejemplo: porcentaje = 10, valor = 10 -> el 10% de 10 es 1, entonces 10 - 1 = 9
 def porcentaje_resta(porcentaje, valor):
-    porciento = float(valor) / 100 * float(porcentaje)
-    respuesta = float(valor) - float(porciento)
+    respuesta = float(valor) * ((100 - float(porcentaje)) / 100)
     return respuesta
 
 # Calcula el % de diferencia entre dos valores

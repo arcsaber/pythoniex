@@ -3,15 +3,14 @@
 # Desde aquí se configura el programa
 
 # INFORMACIÓN PERSONAL
-keypublic = "Aquí tu APIKey"
-keysecret = "Aquí tu APISecret"
+keypublic = "MJPZAO3L-I4U76E7T-RDS6DOJ2-OTIXSYV5"
+keysecret = "e2c9757f2b2666f8e8e40cadcd0d04e643cc41ec67d84dbdde2ee4e8cb81b763f2d818e311f0bb27d87c1f6c2495ea1132a32a6836ca63846fa75b307d828e48"
 
 # Path de la base de datos 
-ruta_base_datos = ''
+ruta_base_datos = '/home/arcsaber/PycharmProjects/elbotogrande/datos/base_datos.db'
 
 #----------------------------------
 # Configuracion del mail (Sólo admite gmail)
-
 # Aquí indica si quieres que el bot te envíe mails cuando compre o venda
 # Elige entre True o False
 enviar_mails_operacion = True
@@ -21,20 +20,20 @@ enviar_mails_operacion = True
 enviar_mails_checkpoint = False
 
 # Aquí indica el mail al cual lo quieres enviar
-mail_to = ''
+mail_to = 'carloselsekey@gmail.com'
 
 # Aquí el mail desde donde quieres que envíe los datos
 # Recomiendo usar un mail el cual no utilices, así no pones en riesgo la contraseña de tu mail
-mail_from = ''
+mail_from = 'elbotogrande@gmail.com'
 
 # Aquí la contraseña del mail desde donde envias la info (mail_from)
-contra = ''
+contra = '3Lbotogrande'
 
 #-----------------
 
 # INFORMACIÓN DEL BOT (Puramente informativa, no la cambies)
-nombre = 'Pythoniex'
-version = '0.3.5'
+nombre = 'El Boto Grande'
+version = '0.1'
 #------------------------------------
 
 # CONFIGURACIÓN DE TRADING
@@ -52,17 +51,17 @@ vender = 'bids'
 
 # CONSTANTES DE TRADING
 
-stop_loss = 2   # Pordentaje de pérdida máxima tras la entrada en resistencia
+stop_loss = 2   # Porcentaje de pérdida máxima tras la entrada en resistencia
 
-numero_checkpoints = 50     # Cantidad de checkpoints entre el precio de compra y la media de resistencia
+numero_checkpoints = 43     # Cantidad de checkpoints entre el precio de compra y la media de resistencia
 
 # Número entre 0 a 100, es el porcentaje que subirá el stop de venta cada vez que se supere un checkpoint
 # El porcentaje se refiere al porcentaje entre el checkpoint anterior y el superado
-stop_loss_movil = 50
+stop_loss_movil = 99
 
 # Esta variable indica los tiempos de espera en segundos que se detendrá Pythoniex cuando 
 # se encuentre en medio del trading
-espera = 30
+espera = 5
 
 
 # El minimo de BTC requerido para tradear
