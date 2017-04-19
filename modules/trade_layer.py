@@ -40,5 +40,6 @@ def definir_checkpoints():
 def subir_stoploss(checkpoint_anterior, checkpoint_nuevo):
     checkpoint_nuevo = ((float(checkpoint_anterior)) * ((100 + config.stop_loss) / 100))
     stoploss = checkpoint_nuevo
+    stoploss = stoploss * ((100 - float(config.stop_loss)) / 100)
     return stoploss
     
