@@ -11,3 +11,4 @@ to do:
   
   - translation to English
   - statistics
+  - GUI with 'sell now' button
