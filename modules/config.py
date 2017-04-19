@@ -57,7 +57,7 @@ numero_checkpoints = 40     # Cantidad de checkpoints entre el precio de compra 
 
 # Número entre 0 a 100, es el porcentaje que subirá el stop de venta cada vez que se supere un checkpoint
 # El porcentaje se refiere al porcentaje entre el checkpoint anterior y el superado
-stop_loss_movil = 99
+stop_loss_movil = 50
 
 # Esta variable indica los tiempos de espera en segundos que se detendrá Pythoniex cuando 
 # se encuentre en medio del trading

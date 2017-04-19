@@ -17,7 +17,7 @@ def venta():
     total_compra = api.returnTradeHistory('BTC_' + moneda)[0]['total'] # Cogemos el precio al que compramos
     cantidad_compra = api.returnTradeHistory('BTC_' + moneda)[0]['amount']
     precio_compra = api.returnTradeHistory('BTC_' + moneda)[0]['rate']
-    precio = llamadas.precio(base.mostrar_moneda(), 'bids')['precio']
+    precio = llamadas.precio(moneda, 'bids')['precio']
     print 'DEP: Obtenemos las constantes de venta'    
     if base.mostrar_check_actual() == None:
         base.insertar_check_actual('1')       # Inserta en la base el checkpoint donde estamos (1)
