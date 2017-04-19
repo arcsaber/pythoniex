@@ -53,7 +53,7 @@ vender = 'bids'
 
 stop_loss = 2   # Porcentaje de pérdida máxima tras la entrada en resistencia
 
-numero_checkpoints = 43     # Cantidad de checkpoints entre el precio de compra y la media de resistencia
+numero_checkpoints = 40     # Cantidad de checkpoints entre el precio de compra y la media de resistencia
 
 # Número entre 0 a 100, es el porcentaje que subirá el stop de venta cada vez que se supere un checkpoint
 # El porcentaje se refiere al porcentaje entre el checkpoint anterior y el superado
