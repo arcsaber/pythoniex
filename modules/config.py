@@ -41,7 +41,7 @@ version = '0.1'
 # Indica si quieres reiniciar el ciclo automáticamente después de la venta
 # AVISO: Se reiniciará intentando comprar en el precio de soporte que pusiste al principio
 # Útil para mercados con alta volatilidad y estrategias de rebote (pocos checkpoints, rangos bajos)
-reiniciar = True
+reiniciar = False
 
 # Elige si Pythoniex intentará comprar cuando el los precios de venta lleguen al rango de soporte
 # o si lo hará cuando los precios de venta lleguen al rango de soporte
