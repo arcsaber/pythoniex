@@ -62,19 +62,18 @@ def venta():
             print 'Si deseas guardarlo deberás configurarlo manualmente desde http://www.poloniex.com'
             print 
             funcionamiento.pausar_trade_venta()
-    print 'DEP: El stop loss ha saltado, comprobamos si es rentable vender a precio de mercado'
+    '''print 'DEP: El stop loss ha saltado, comprobamos si es rentable vender a precio de mercado'
     estimacion_venta = float(llamadas.precio(moneda, config.vender)['precio']) * float(llamadas.balance(moneda, 'available'))
     if float(estimacion_venta - (estimacion_venta / 400)) > float(total_compra):    # Si la venta a precio de mercado con comisiones es rentable
         print 'DEP: Parece que es rentable, intentamos vender'
         respuesta = llamadas.venta(base.mostrar_moneda(), str((llamadas.precio(base.mostrar_moneda(), config.vender))['precio']), float(llamadas.balance(base.mostrar_moneda(), 'available'))) # Vende a precio de mercado
+        id_venta = respuesta['orderNumber']'''
+    if float((llamadas.precio(moneda, config.vender))['precio']) < float(base.mostrar_stoploss()):  # Que la venta haya caído por debajo del stop loss de protección
+        print 'DEP: El precio ha caído por debajo del stoploss de protección'
+        respuesta = llamadas.venta(base.mostrar_moneda(), str((llamadas.precio(base.mostrar_moneda(), config.vender))['precio']), float(llamadas.balance(base.mostrar_moneda(), 'available'))) # Vende desesperadamente a precio de compra
         id_venta = respuesta['orderNumber']
-    else:               # Si no,pueden suceder dos cosas
-        if float((llamadas.precio(moneda, config.vender))['precio']) < float(calculos.porcentaje_resta(config.stop_loss, calculos.media(base.mostrar_margen('soporte', 'minimo'), base.mostrar_margen('soporte', 'maximo')))):  # Que la venta haya caído por debajo del stop loss de protección
-            print 'DEP: El precio ha caído por debajo del stoploss de protección'
-            respuesta = llamadas.venta(base.mostrar_moneda(), str((llamadas.precio(base.mostrar_moneda(), config.vender))['precio']), float(llamadas.balance(base.mostrar_moneda(), 'available'))) # Vende desesperadamente a precio de compra
-            id_venta = respuesta['orderNumber']
-        else:           # O que no haya caído por debajo del stop de protección, en ese caso
-            venta()     # Vuelve a comenzar el bucle para redefinir el stop_loss movil (Esto se hace para defendernos de falsas caídas o de ordenes de compra en solitario cercanas al precio de venta que desaparecen de repente)
+    else:           # O que no haya caído por debajo del stop de protección, en ese caso
+        venta()     # Vuelve a comenzar el bucle para redefinir el stop_loss movil (Esto se hace para defendernos de falsas caídas o de ordenes de compra en solitario cercanas al precio de venta que desaparecen de repente)
     print 'DEP: Esperamos 5 segundos a que el servidor procese la orden'
     time.sleep(5)       # Duerme 5 segundos para que el servidor procese la orden
     estado = 'en_proceso'
@@ -118,7 +117,7 @@ def compra():
         try:
             if calculos.rango(str(llamadas.precio(moneda, config.comprar)['precio']), base.mostrar_margen('soporte', 'minimo'), base.mostrar_margen('soporte', 'maximo')) == True:  #Si el precio de venta/compra actual está en el rango de soporte
                 print 'DEP: El precio de ' + moneda + ' (' + str(llamadas.precio(moneda, 'asks')['precio']) + ') está en el rango de soporte, intentamos comprar'   
-                cantidad = float(llamadas.balance('BTC', 'available')) / (float(llamadas.precio(moneda, config.comprar)['precio']) + 0.00000001)  # La cantidad que vamos a comprar
+                cantidad = (float(llamadas.balance('BTC', 'available')) - 0.00000002) / (float(llamadas.precio(moneda, config.comprar)['precio']) + 0.00000001)  # La cantidad que vamos a comprar
                 try:
                     respuesta = api.returnOpenOrders('BTC_' + moneda)[0]
                 except IndexError:
@@ -130,7 +129,6 @@ def compra():
                 except (IndexError, KeyError, UnboundLocalError):
                     respuesta = api.buy('BTC_' + moneda, str(float(llamadas.precio(moneda, config.comprar)['precio']) + 0.00000001), str(cantidad))   #Compramos a precio de compra y nos quedamos con la id de la transacción
                     try:
-                        print str(respuesta['orderNumber'])
                         id_compra = str(respuesta['orderNumber'])
                         print 'DEP: Abrimos la compra a ' + str(api.returnOpenOrders('BTC_' + moneda)[0]['rate']) + ', la id es :' + str(id_compra)
                     except IndexError or KeyError or TypeError:
