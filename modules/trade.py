@@ -26,16 +26,18 @@ def venta():
         print 'DEP: Insertamos en la base el primer check_actual y entramos al bucle de venta'
     while float(base.mostrar_stoploss()) < float(precio):  # Mientras no salte el stop loss (movil o de protección)
         try:        
-            precio_mercado = llamadas.precio(moneda, config.vender)['precio']             # Cogemos el precio de compras
+            precio_mercado = llamadas.precio(moneda, config.vender)['precio'] # Cogemos el precio de compras
             print 'Precio de mercado: ' + str(precio_mercado) + ',(compraste a ' + str(precio_compra) + ')'
             if float(str(precio_mercado)) > float(str(base.mostrar_checkpoint(base.mostrar_check_actual()))): # Si el precio de mercado es mayor que el checkpoint actual
                 if base.mostrar_check_actual() == '1':
-                    base.actualizar_stoploss(str(trade_layer.subir_stoploss(soporte_inicial, str(base.mostrar_checkpoint(1))))) #Subimos el stoploss
+                    base.actualizar_stoploss(str(trade_layer.subir_stoploss(str(base.mostrar_checkpoint(1))))) #Subimos el stoploss
                     stop_loss = base.mostrar_stoploss()
+                    precio = precio_mercado
                     print 'DEP: El check_actual == 1, subimos el stop_loss a ' + str(stop_loss)
                 else:
-                    base.actualizar_stoploss(str(trade_layer.subir_stoploss(base.mostrar_checkpoint(str(base.mostrar_check_actual())), float(base.mostrar_checkpoint(str(base.mostrar_check_actual()))))))
+                    base.actualizar_stoploss(str(trade_layer.subir_stoploss(base.mostrar_checkpoint(str(base.mostrar_check_actual())))))
                     stop_loss = base.mostrar_stoploss()
+                    precio = precio_mercado
                     print 'DEP: Subimos el stop_loss a ' + str(stop_loss)
                 if config.enviar_mails_checkpoint:
                     venta_total_stop_loss = (float(stop_loss) * float(cantidad_compra)) - (float(stop_loss) / 400)
@@ -47,6 +49,7 @@ def venta():
                 print 'DEP: Actualizamos el check_actual a ' + base.mostrar_check_actual()
                 llamadas.venta(base.mostrar_moneda(), llamadas.precio(base.mostrar_moneda(), config.vender), float(llamadas.balance(base.mostrar_moneda(), 'available')))
             else:
+                precio = precio_mercado
                 print 'DEP: Precio < check_actual ({0}), actualmente tenemos {1} de ganancia per mBTC, esperamos {2} segundos'.format(
                     str(base.mostrar_checkpoint(base.mostrar_check_actual())),
                     str((float(precio_mercado) - float(precio_compra))*1000),
