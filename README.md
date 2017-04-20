@@ -1,3 +1,13 @@
+The idea of this bot is simple: if you spot a bull market (pump) and want to profit from it while not wanting to worry about the ensuing bear market (dump), you just let this bot do the job.
+
+With its configurable mobile stop loss the bot tries to secure your earnings or, in the worst case, save your investments from becoming shitcoins and you having to baghold them until the next pump.
+
+Test with a small amount and play around with the stop loss percentage and checkpoint amounts.
+
+As always, use at your own risk since you could lose all your money!
+
+
+
 forked from https://github.com/mondeja/pythoniex
 
 to do:
@@ -11,4 +21,4 @@ to do:
   
   - translation to English
   - statistics
-  - GUI with 'sell now' button
+  - GUI with profit/loss analyser, graph and 'sell now' button
