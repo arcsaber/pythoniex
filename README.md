@@ -18,6 +18,7 @@ to do:
   - fully fix sell and buy functions
   - I'm not sure if the stop loss is working properly as intended
   
+  - incorporate a bittrex API for going full shitcoin
   - open ended mobile stop loss
   - implement indicators
   - rebuy with automatically adjusted support levels
