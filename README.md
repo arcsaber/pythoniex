@@ -1,14 +1,15 @@
-##El Boto Grande
+## El Boto Grande
 
 The idea of this bot is simple: if you spot a bull market (pump) and want to profit from it while not wanting to worry about the ensuing bear market (dump), you just let this bot do the job.
 
-With its configurable mobile stop loss the bot tries to secure your earnings or, in the worst case, save your investments from becoming shitcoins and you having to baghold them until the next pump.
+With its configurable mobile stop loss the bot tries to secure your earnings or, in the worst case, save your investments from becoming ~~shitcoins~~ altcoins and you having to baghold them until the next pump.
 
 Test with a small amount, enter the support (starting) and resistance (end) ranges and play around with the stop loss percentage and checkpoint amounts.
 
 As always, use at your own risk since you could lose all your money!
 
-BTC Donations are welcome: 1Km6hoCghMK76TGirFfzXxi2dECdyxS2sc
+BTC Donations are welcome: 
+1Km6hoCghMK76TGirFfzXxi2dECdyxS2sc
 
 forked from https://github.com/mondeja/pythoniex
 
