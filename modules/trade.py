@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-import time, sys
+import time, datetime, sys
 import urllib2
 from core import calculos
 from wrappers import poloniex
@@ -19,60 +19,50 @@ def venta():
     precio_compra = api.returnTradeHistory('BTC_' + moneda)[0]['rate']
     precio = llamadas.precio(moneda, 'bids')['precio']
     print 'DEP: Obtenemos las constantes de venta'
-    if base.mostrar_check_actual() is None:
-        base.insertar_check_actual('1')       # Inserta en la base el checkpoint donde estamos (1)
+    if base.mostrar_checkpoint() is None:
+        base.insertar_checkpoint(precio_compra)
+        print 'DEP: Insertamos en la base el primer checkpoint y entramos al bucle de venta' # Inserta en la base el checkpoint donde estamos (1)
     else:                            # a no ser que ya exista un check_actual
-        base.actualizar_check_actual('1')     # en ese caso actualízalo por (1)
-        print 'DEP: Insertamos en la base el primer check_actual y entramos al bucle de venta'
+        pass
     while float(base.mostrar_stoploss()) < float(precio):  # Mientras no salte el stop loss (movil o de protección)
         try:
             precio_mercado = llamadas.precio(moneda, config.vender)['precio'] # Cogemos el precio de compras
-            print 'Precio de mercado: ' + str(precio_mercado) + ',(compraste a ' + str(precio_compra) + ')'
-            if float(str(precio_mercado)) > float(str(base.mostrar_checkpoint(base.mostrar_check_actual()))): # Si el precio de mercado es mayor que el checkpoint actual
-                if base.mostrar_check_actual() == '1':
-                    base.actualizar_stoploss(str(trade_layer.subir_stoploss(str(base.mostrar_checkpoint(1))))) #Subimos el stoploss
-                    stop_loss = base.mostrar_stoploss()
-                    precio = precio_mercado
-                    print 'DEP: El check_actual == 1, subimos el stop_loss a ' + str(stop_loss)
-                else:
-                    base.actualizar_stoploss(str(trade_layer.subir_stoploss(base.mostrar_checkpoint(str(base.mostrar_check_actual())))))
-                    stop_loss = base.mostrar_stoploss()
-                    precio = precio_mercado
-                    print 'DEP: Subimos el stop_loss a ' + str(stop_loss)
-                if config.enviar_mails_checkpoint:
-                    venta_total_stop_loss = (float(stop_loss) * float(cantidad_compra)) - (float(stop_loss) / 400)
-                    avisos.ganancia_relativa(str(venta_total_stop_loss), str(total_compra))
-                    print 'DEP: Avisamos por mail de la ganacia relativa '
-                else:
-                    pass
-                base.actualizar_check_actual(str(int(base.mostrar_check_actual()) + 1))     # Nos vamos al siguiente check_actual
-                print 'DEP: Actualizamos el check_actual a ' + base.mostrar_check_actual()
-                llamadas.venta(base.mostrar_moneda(), llamadas.precio(base.mostrar_moneda(), config.vender), float(llamadas.balance(base.mostrar_moneda(), 'available')))
-            else:
+            precio_maximo = trade_layer.calc_precio_maximo(precio_mercado)
+            print 'Precio de mercado: ' + str(precio_mercado) + ', compraste a ' + str(precio_compra) + ', Checkpoint: ' + str(base.mostrar_checkpoint())
+            if float(str(precio_mercado)) > float(base.mostrar_checkpoint()): # Si el precio de mercado es mayor que el checkpoint actual
+                base.actualizar_stoploss(str(trade_layer.subir_stoploss(precio_maximo)))
+                stop_loss = base.mostrar_stoploss()
+                base.actualizar_checkpoints(trade_layer.calc_precio_maximo(precio_maximo))
                 precio = precio_mercado
-                print 'DEP: Precio < check_actual ({0}), actualmente tenemos {1} de ganancia per mBTC, esperamos {2} segundos'.format(
-                    str(base.mostrar_checkpoint(base.mostrar_check_actual())),
-                    "{0:.3f}".format((float(precio_mercado) - float(precio_compra))*1000) +
-                    ' (' + "{0:.2f}".format(100 * (float(precio_mercado) / float(precio_compra)) - 100) + '%)',
-                    str(config.espera))
-                print 'Stoploss: ' + str(float(base.mostrar_stoploss()))
-                time.sleep(int(config.espera))
+                print 'DEP: Subimos el stop_loss a ' + str(stop_loss)
+            if config.enviar_mails_checkpoint:
+                venta_total_stop_loss = (float(stop_loss) * float(cantidad_compra)) - (float(stop_loss) / 400)
+                avisos.ganancia_relativa(str(venta_total_stop_loss), str(total_compra))
+                print 'DEP: Avisamos por mail de la ganacia relativa '
+            else:
+                pass
+            llamadas.venta(base.mostrar_moneda(), llamadas.precio(base.mostrar_moneda(), config.vender), float(llamadas.balance(base.mostrar_moneda(), 'available')))
+            precio = precio_mercado
+            print 'DEP: actualmente tenemos {0} de ganancia per mBTC, esperamos {1} segundos'.format(
+                "{0:.3f}".format((float(precio_mercado) - float(precio_compra))*1000) +
+                ' (' + "{0:.2f}".format(100 * (float(precio_mercado) / float(precio_compra)) - 100) + '%)',
+                str(config.espera))
+            print 'Stoploss: ' + str(float(base.mostrar_stoploss())), ', Timestamp: {:%d.%m.%Y %H:%M:%S}'.format(datetime.datetime.now())
+            print
+            time.sleep(int(config.espera))
         except KeyboardInterrupt:
             print 'Vas a detener el proceso de venta'
             print 'El programa no guardará el stop-loss actual'
             print 'Si deseas guardarlo deberás configurarlo manualmente desde http://www.poloniex.com'
             print
             funcionamiento.pausar_trade_venta()
-    '''print 'DEP: El stop loss ha saltado, comprobamos si es rentable vender a precio de mercado'
-    estimacion_venta = float(llamadas.precio(moneda, config.vender)['precio']) * float(llamadas.balance(moneda, 'available'))
-    if float(estimacion_venta - (estimacion_venta / 400)) > float(total_compra):    # Si la venta a precio de mercado con comisiones es rentable
-        print 'DEP: Parece que es rentable, intentamos vender'
-        respuesta = llamadas.venta(base.mostrar_moneda(), str((llamadas.precio(base.mostrar_moneda(), config.vender))['precio']), float(llamadas.balance(base.mostrar_moneda(), 'available'))) # Vende a precio de mercado
-        id_venta = respuesta['orderNumber']'''
     if float((llamadas.precio(moneda, config.vender))['precio']) < float(base.mostrar_stoploss()):  # Que la venta haya caído por debajo del stop loss de protección
         print 'DEP: El precio ha caído por debajo del stoploss de protección'
-        respuesta = llamadas.venta(base.mostrar_moneda(), str((llamadas.precio(base.mostrar_moneda(), config.vender))['precio']), float(llamadas.balance(base.mostrar_moneda(), 'available'))) # Vende desesperadamente a precio de compra
-        id_venta = respuesta['orderNumber']
+        try:
+            respuesta = llamadas.venta(base.mostrar_moneda(), str((llamadas.precio(base.mostrar_moneda(), config.vender))['precio']), float(llamadas.balance(base.mostrar_moneda(), 'available'))) # Vende desesperadamente a precio de compra
+            id_venta = respuesta['orderNumber']
+        except TypeError:
+            pass
     else:           # O que no haya caído por debajo del stop de protección, en ese caso <------- rly?
         venta()     # Vuelve a comenzar el bucle para redefinir el stop_loss movil (Esto se hace para defendernos de falsas caídas o de ordenes de compra en solitario cercanas al precio de venta que desaparecen de repente)
     print 'DEP: Esperamos 5 segundos a que el servidor procese la orden'
@@ -118,7 +108,7 @@ def compra():
         try:
             if calculos.rango(str(llamadas.precio(moneda, config.comprar)['precio']), base.mostrar_margen('soporte', 'minimo'), base.mostrar_margen('soporte', 'maximo')) == True:  #Si el precio de venta/compra actual está en el rango de soporte
                 print 'DEP: El precio de ' + moneda + ' (' + str(llamadas.precio(moneda, 'asks')['precio']) + ') está en el rango de soporte, intentamos comprar'
-                cantidad = (float(llamadas.balance('BTC', 'available')) - 0.00000003) / (float(llamadas.precio(moneda, config.comprar)['precio']) + 0.00000001)  # La cantidad que vamos a comprar
+                cantidad = (float(llamadas.balance('BTC', 'available'))) / (float(llamadas.precio(moneda, config.comprar)['precio']) + 0.00000001)  # La cantidad que vamos a comprar
                 try:
                     respuesta = api.returnOpenOrders('BTC_' + moneda)[0]
                 except IndexError:
