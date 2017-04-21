@@ -57,6 +57,7 @@ def ver_stoploss():
 
 # Configurador inicial del programa
 def configuracion_inicial():
+    base.borrar_checkpoints()
     moneda_anterior = base.mostrar_moneda()
     if base.mostrar_moneda() != None:
         print 'Vas a tradear en el mercado de:', moneda_anterior
@@ -119,6 +120,7 @@ def configuracion_inicial():
             base.actualizar_margenes('soporte', soporte_min, soporte_max)
             base.actualizar_margenes('resistencia', resistencia_min, resistencia_max)
 
+
 #-----------------------------------------------------------
 
 # Estas funciones se lanzan si el usuario pulsa Ctrl+C en el trade de compra o de venta
@@ -129,7 +131,7 @@ def pausar_trade_venta():
         print 'Vas a detener la venta, se abrirá poloniex automáticamente para dejarlo todo amarrado'
         print
         print '¡Hasta la próxima!'
-        webbrowser.open_new_tab('http://www.poloniex.com/exchange#btc_' + base.mostrar_moneda().lower())
+        #webbrowser.open_new_tab('http://www.poloniex.com/exchange#btc_' + base.mostrar_moneda().lower())
         base.cerrar()   # Cerramos la base de datos
         sys.exit(0)
     elif pausa == 'n':

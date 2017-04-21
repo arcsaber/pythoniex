@@ -40,8 +40,7 @@ class Base_datos:
 
     def crear_tabla_checkpoints(self):
         self.cursor.execute('''CREATE TABLE CHECKPOINTS
-            (NUMERO INT null,
-            VALOR DOUBLE null) ''')
+            (VALOR INT null) ''')
     
     # Esta tabla guarda el checkpoint sobre el que nos encontramos actualmente
     def crear_tabla_check_actual(self):
@@ -74,9 +73,9 @@ class Base_datos:
         self.con.commit()
     
         #El numero será el checkpoint y el valor será el precio
-    def insertar_checkpoint(self, numero, valor):
-        self.cursor.execute("INSERT INTO CHECKPOINTS (NUMERO, VALOR) \
-            VALUES ('" + str(numero) + "', '" + str(valor) + "')")
+    def insertar_checkpoint(self, valor):
+        self.cursor.execute("INSERT INTO CHECKPOINTS (VALOR) \
+            VALUES ('" + str(valor) + "')")
         self.con.commit()
         
     def insertar_stoploss(self, valor):
@@ -123,8 +122,8 @@ class Base_datos:
             return i[0]
     
     # Muestra el valor del checkpoint actual
-    def mostrar_checkpoint(self, numero):
-        self.cursor.execute("SELECT VALOR from CHECKPOINTS where NUMERO='" + str(numero) + "'")
+    def mostrar_checkpoint(self):
+        self.cursor.execute("SELECT VALOR from CHECKPOINTS")
         for i in self.cursor:
             return i[0]
             
@@ -160,8 +159,8 @@ class Base_datos:
         self.cursor.execute("UPDATE ID set '" + tipo + '" = "' + str(numero) + "'")
         self.con.commit()
         
-    def actualizar_check_actual(self, numero):
-        self.cursor.execute("UPDATE CHECK_ACTUAL set CHECK_ACTUAL = '" + str(numero) + "'")
+    def actualizar_checkpoints(self, numero):
+        self.cursor.execute("UPDATE CHECKPOINTS set VALOR = '" + str(numero) + "'")
         self.con.commit()
         
     def borrar_checkpoints(self):
