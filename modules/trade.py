@@ -18,14 +18,14 @@ def venta():
     cantidad_compra = api.returnTradeHistory('BTC_' + moneda)[0]['amount']
     precio_compra = api.returnTradeHistory('BTC_' + moneda)[0]['rate']
     precio = llamadas.precio(moneda, 'bids')['precio']
-    print 'DEP: Obtenemos las constantes de venta'    
-    if base.mostrar_check_actual() == None:
+    print 'DEP: Obtenemos las constantes de venta'
+    if base.mostrar_check_actual() is None:
         base.insertar_check_actual('1')       # Inserta en la base el checkpoint donde estamos (1)
     else:                            # a no ser que ya exista un check_actual
         base.actualizar_check_actual('1')     # en ese caso actualízalo por (1)
         print 'DEP: Insertamos en la base el primer check_actual y entramos al bucle de venta'
     while float(base.mostrar_stoploss()) < float(precio):  # Mientras no salte el stop loss (movil o de protección)
-        try:        
+        try:
             precio_mercado = llamadas.precio(moneda, config.vender)['precio'] # Cogemos el precio de compras
             print 'Precio de mercado: ' + str(precio_mercado) + ',(compraste a ' + str(precio_compra) + ')'
             if float(str(precio_mercado)) > float(str(base.mostrar_checkpoint(base.mostrar_check_actual()))): # Si el precio de mercado es mayor que el checkpoint actual
@@ -52,7 +52,8 @@ def venta():
                 precio = precio_mercado
                 print 'DEP: Precio < check_actual ({0}), actualmente tenemos {1} de ganancia per mBTC, esperamos {2} segundos'.format(
                     str(base.mostrar_checkpoint(base.mostrar_check_actual())),
-                    str((float(precio_mercado) - float(precio_compra))*1000),
+                    "{0:.3f}".format((float(precio_mercado) - float(precio_compra))*1000) +
+                    ' (' + "{0:.2f}".format(100 * (float(precio_mercado) / float(precio_compra)) - 100) + '%)',
                     str(config.espera))
                 print 'Stoploss: ' + str(float(base.mostrar_stoploss()))
                 time.sleep(int(config.espera))
@@ -60,7 +61,7 @@ def venta():
             print 'Vas a detener el proceso de venta'
             print 'El programa no guardará el stop-loss actual'
             print 'Si deseas guardarlo deberás configurarlo manualmente desde http://www.poloniex.com'
-            print 
+            print
             funcionamiento.pausar_trade_venta()
     '''print 'DEP: El stop loss ha saltado, comprobamos si es rentable vender a precio de mercado'
     estimacion_venta = float(llamadas.precio(moneda, config.vender)['precio']) * float(llamadas.balance(moneda, 'available'))
@@ -72,7 +73,7 @@ def venta():
         print 'DEP: El precio ha caído por debajo del stoploss de protección'
         respuesta = llamadas.venta(base.mostrar_moneda(), str((llamadas.precio(base.mostrar_moneda(), config.vender))['precio']), float(llamadas.balance(base.mostrar_moneda(), 'available'))) # Vende desesperadamente a precio de compra
         id_venta = respuesta['orderNumber']
-    else:           # O que no haya caído por debajo del stop de protección, en ese caso
+    else:           # O que no haya caído por debajo del stop de protección, en ese caso <------- rly?
         venta()     # Vuelve a comenzar el bucle para redefinir el stop_loss movil (Esto se hace para defendernos de falsas caídas o de ordenes de compra en solitario cercanas al precio de venta que desaparecen de repente)
     print 'DEP: Esperamos 5 segundos a que el servidor procese la orden'
     time.sleep(5)       # Duerme 5 segundos para que el servidor procese la orden
@@ -80,26 +81,26 @@ def venta():
     while estado == 'en proceso':
         try:
             api.returnOpenOrders('BTC_' + moneda)[0]  # Si hay orden abierta todavía
-            print 'DEP: La orden sigue abierta, esperamos 7 segundos' 
+            print 'DEP: La orden sigue abierta, esperamos 7 segundos'
             time.sleep(7)           # Esto se hace para evitar que la venta no se haya cumplido por bajadas fuertes del mercado
             try:
                 api.returnOpenOrders('BTC_' + moneda)[0]   # Si tras 7 segundos no se ha vendido
                 print 'DEP: Aún no se ha vendido, cancelamos la orden volvemos a lanzar la función de venta'
-                api.cancel('BTC_' + moneda, str(id_venta)) 
+                api.cancel('BTC_' + moneda, str(id_venta))
                 venta()
             except IndexError:
                 estado = 'vendido'
         except IndexError:
             estado = 'vendido'
     print 'DEP: La venta se ha realizado'
-    if config.enviar_mails_operacion == True:
+    if config.enviar_mails_operacion:
         informacion = llamadas.ultimo_trade(moneda)     # Cogemos la información de la venta
-        avisos.operacion(informacion)            #Avisamos al correo de la venta efectuada
+        avisos.operacion(informacion)            # Avisamos al correo de la venta efectuada
         print 'DEP: Enviando mail de aviso de venta'
     else:
         pass
     print 'DEP: LA DEPURACION DE LA VENTA SE HA COMPLETADO CORRECTAMENTE'
-    if config.reiniciar == True:                               # Comprobamos si está el reinicio automático activado
+    if config.reiniciar:                               # Comprobamos si está el reinicio automático activado
         print 'DEP: El reinicio automático está activado, así que volvemos a comprar'
         organizador()
     else:
@@ -107,7 +108,7 @@ def venta():
         print '¡Hasta la próxima!'
         base.cerrar()   # Cerramos la base de datos
         sys.exit(0)
-    
+
 #Bucle de compra
 def compra():
     moneda = str(base.mostrar_moneda())
@@ -116,8 +117,8 @@ def compra():
     while estado == 'en_proceso':
         try:
             if calculos.rango(str(llamadas.precio(moneda, config.comprar)['precio']), base.mostrar_margen('soporte', 'minimo'), base.mostrar_margen('soporte', 'maximo')) == True:  #Si el precio de venta/compra actual está en el rango de soporte
-                print 'DEP: El precio de ' + moneda + ' (' + str(llamadas.precio(moneda, 'asks')['precio']) + ') está en el rango de soporte, intentamos comprar'   
-                cantidad = (float(llamadas.balance('BTC', 'available')) - 0.00000002) / (float(llamadas.precio(moneda, config.comprar)['precio']) + 0.00000001)  # La cantidad que vamos a comprar
+                print 'DEP: El precio de ' + moneda + ' (' + str(llamadas.precio(moneda, 'asks')['precio']) + ') está en el rango de soporte, intentamos comprar'
+                cantidad = (float(llamadas.balance('BTC', 'available')) - 0.00000003) / (float(llamadas.precio(moneda, config.comprar)['precio']) + 0.00000001)  # La cantidad que vamos a comprar
                 try:
                     respuesta = api.returnOpenOrders('BTC_' + moneda)[0]
                 except IndexError:
@@ -131,12 +132,12 @@ def compra():
                     try:
                         id_compra = str(respuesta['orderNumber'])
                         print 'DEP: Abrimos la compra a ' + str(api.returnOpenOrders('BTC_' + moneda)[0]['rate']) + ', la id es :' + str(id_compra)
-                    except IndexError or KeyError or TypeError:
+                    except (IndexError, KeyError, TypeError):
                         pass
-                if llamadas.orden_abierta(moneda) == True:    #Mientras haya una orden abierta
-                    print 'DEP: Esperamos  ' + str(config.espera) + ' segundos a que la compra se efectúe'                
+                if llamadas.orden_abierta(moneda):    #Mientras haya una orden abierta
+                    print 'DEP: Esperamos  ' + str(config.espera) + ' segundos a que la compra se efectúe'
                     time.sleep(config.espera)                          #Espera 30 segundos y repite el bucle hasta que ya no haya orden abierta
-                    if llamadas.orden_abierta(moneda) == True:      # Si tras ese tiempo sigue abierta
+                    if llamadas.orden_abierta(moneda):      # Si tras ese tiempo sigue abierta
                         print 'Cancelamos la compra y volvemos a empezar'
                         api.cancel('BTC_' + moneda, str(id_compra))      # Cancélala y vuelve a empezar el bucle
                         compra()
@@ -150,7 +151,9 @@ def compra():
                 print 'El precio de compra actual de ' + moneda + ' no está en el rango de soporte (' + str(llamadas.precio(moneda, config.comprar)['precio']) + ' BTC)'
                 print 'El Boto Grande intentará comprar cuando llegue, ten paciencia...'
                 print
-                if calculos.rango(str(llamadas.precio(moneda, config.comprar)['precio']), base.mostrar_margen('soporte', 'minimo'), base.mostrar_margen('soporte', 'maximo')) == False:             
+                if not calculos.rango(str(llamadas.precio(moneda, config.comprar)['precio']),
+                                      base.mostrar_margen('soporte', 'minimo'),
+                                      base.mostrar_margen('soporte', 'maximo')):
                     time.sleep(5)          #El programa duerme 5 segundos y vuelve a empezar el bucle While, para intentar de nuevo la compra
                     compra()
         except KeyboardInterrupt:
@@ -158,7 +161,7 @@ def compra():
             print
             funcionamiento.pausar_trade_compra()
     informacion = llamadas.ultimo_trade(moneda)     # Cogemos la información de la compra
-    print 'DEP: Cogemos la información de la compra'    
+    print 'DEP: Cogemos la información de la compra'
     avisos.operacion(informacion)       # Avisamos al correo de la compra efectuada
     print 'DEP: Avisamos al correo de la compra efectuada'
     print 'DEP: Aquí lanzaríamos la función de venta'
@@ -193,7 +196,7 @@ def organizador():
     except urllib2.URLError:
         print 'No se ha podido contactar con Poloniex, comprobando la conexion...'
         conexion = wifi_conexion.red()
-        if conexion == False:
+        if not conexion:
             print 'Intentando reconectar...'
             print 'Aún no hay un módulo instalado que permita reconectarse a la red'
         else:
@@ -207,13 +210,13 @@ def trade():
         compra()
     elif eleccion == '2':
         venta()
-    elif eleccion == '3':       
+    elif eleccion == '3':
         organizador()
     else:
         print 'Te has equivocado de numero'
         trade()
-        
+
 #print llamadas.precio('BTC_' + 'LSK', 'bids')
 #print llamadas.balance('MAID', 'available')
-        
-        
+
+
