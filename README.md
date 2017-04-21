@@ -15,8 +15,9 @@ forked from https://github.com/mondeja/pythoniex
 
 to do:
   
+  - timestamp
   - fully fix sell and buy functions
-  - I'm not sure if the stop loss is working properly as intended
+  - I'm not sure if the stop loss is working properly as intended (resets stop loss)
   - open ended mobile stop loss by getting rid of the checkpoint system and using the highest rate as only checkpoint
   
   - incorporate a bittrex API for going full shitcoin
