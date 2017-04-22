@@ -50,7 +50,7 @@ class Base_datos:
     def crear_tabla_stoploss(self):
         self.cursor.execute('''CREATE TABLE STOPLOSS
             (STOPLOSS DOUBLE null) ''')
-    
+
         #El tipo puede ser resistencia o soporte
     def insertar_margen(self, tipo, valor_min, valor_max):
         self.cursor.execute("INSERT INTO MARGENES (TIPO, VALOR_MIN, VALOR_MAX) \
@@ -137,7 +137,7 @@ class Base_datos:
         self.cursor.execute("SELECT STOPLOSS from STOPLOSS")
         for i in self.cursor:
             return i[0]
-        
+
     def actualizar_margenes(self, tipo, valor_min, valor_max):
         self.cursor.execute("UPDATE MARGENES set VALOR_MIN='" + str(valor_min) + "' where TIPO='" + tipo + "'")
         self.cursor.execute("UPDATE MARGENES set VALOR_MAX='" + str(valor_max) + "' where TIPO='" + tipo + "'")

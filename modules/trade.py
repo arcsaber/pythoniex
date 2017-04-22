@@ -58,13 +58,15 @@ def venta():
             funcionamiento.pausar_trade_venta()
     if float((llamadas.precio(moneda, config.vender))['precio']) < float(base.mostrar_stoploss()):  # Que la venta haya caído por debajo del stop loss de protección
         print 'DEP: El precio ha caído por debajo del stoploss de protección'
-        try:
-            respuesta = llamadas.venta(base.mostrar_moneda(), str((llamadas.precio(base.mostrar_moneda(), config.vender))['precio']), float(llamadas.balance(base.mostrar_moneda(), 'available'))) # Vende desesperadamente a precio de compra
-            id_venta = respuesta['orderNumber']
-        except TypeError:
-            pass
-    else:           # O que no haya caído por debajo del stop de protección, en ese caso <------- rly?
-        venta()     # Vuelve a comenzar el bucle para redefinir el stop_loss movil (Esto se hace para defendernos de falsas caídas o de ordenes de compra en solitario cercanas al precio de venta que desaparecen de repente)
+        venta_successful = False
+        while not venta_successful:
+            try:
+                respuesta = llamadas.venta(base.mostrar_moneda(), str((llamadas.precio(base.mostrar_moneda(), config.vender))['precio']), float(llamadas.balance(base.mostrar_moneda(), 'available'))) # Vende desesperadamente a precio de compra
+                id_venta = respuesta['orderNumber']
+                venta_successful = True
+            except TypeError:
+                venta_successful = False
+                pass
     print 'DEP: Esperamos 5 segundos a que el servidor procese la orden'
     time.sleep(5)       # Duerme 5 segundos para que el servidor procese la orden
     estado = 'en_proceso'
