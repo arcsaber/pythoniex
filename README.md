@@ -6,7 +6,7 @@ The idea of this bot ~~is~~ was simple: if you spot a bull market (pump) and wan
 
 With its configurable mobile stop loss the bot tries to secure your earnings or, in the worst case, save your investments from becoming ~~shitcoins~~ altcoins and you having to baghold them until the next pump.
 
-Test with a small amount, enter the support (starting) and resistance (end) ranges and play around with the stop loss percentage and checkpoint amounts.
+Test with a small amount, enter the support (starting) and resistance (end) ranges and play around with the stop loss percentage.
 
 As always, use at your own risk since you could lose all your money!
 
